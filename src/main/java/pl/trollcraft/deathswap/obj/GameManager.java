@@ -18,7 +18,7 @@ public class GameManager {
         this.plugin = plugin;
     }
 
-    public void create(Player player) {
+    public void create(Player player, boolean broad) {
         for (Game game : this.games) {
             if (game.findPlayer(player)) {
                 player.sendMessage(ChatUtils.color("&3Jesteś już w gre aby zakonczyc gre uzyj ./wyjdz"));
@@ -30,7 +30,7 @@ public class GameManager {
         }
 
         // We can create a game
-        Game newGame = new Game(player, this);
+        Game newGame = new Game(player, this, broad);
         this.games.add(newGame);
         player.sendMessage(ChatUtils.color("&3Utworzono gre!"));
     }
@@ -101,8 +101,12 @@ public class GameManager {
             owner.sendMessage(ChatUtils.color("&4&lNie ma takiej osoby na serwerze."));
             return;
         }
-
+        if(ownersGame.findPlayer(player)){
+            owner.sendMessage(ChatUtils.color("&4&lTen gracz juz jest w tej grze."));
+            return;
+        }
         ownersGame.join(player);
+        owner.sendMessage(ChatUtils.color("&4&lPomyslnie dodano " + playerName));
     }
 
     public void end(Player player) {

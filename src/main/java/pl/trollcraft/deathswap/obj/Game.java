@@ -27,9 +27,9 @@ public class Game {
     private Location startLocation;
     public String id;
     public Player owner;
-    private boolean quit;
+    private boolean isGame;
 
-    public Game(Player owner, GameManager gameManager) {
+    public Game(Player owner, GameManager gameManager, boolean broad) {
         this.owner = owner;
         this.gameManager = gameManager;
         this.players = new ArrayList<Player>();
@@ -37,7 +37,12 @@ public class Game {
         this.swapRadius = getRandomRadius(400, 1200);
         this.players.add(owner);
         this.id = IDGenerator.random(3);
-        owner.sendMessage(ChatUtils.color("&4Gra utworzona! Zapros znajomych lub daj znac na chacie ze szukasz graczy ;) Kod gry:  ") + this.id);
+        this.isGame = true;
+        owner.sendMessage(ChatUtils.color("&4Gra utworzona! Zapros znajomych lub uzyj ./stworz roz)"));
+        owner.sendMessage(ChatUtils.color("&4Kod gry: &1&l" + this.id));
+        if(broad) {
+            ChatUtils.broadcastID(this.id, owner.getDisplayName());
+        }
     }
 
 
@@ -63,6 +68,7 @@ public class Game {
             player.teleport(player.getWorld().getSpawnLocation());
         }
         resetPlayers();
+        isGame = false;
         this.gameManager.end(this);
     }
 
@@ -75,29 +81,28 @@ public class Game {
         return false;
     }
 
-    public void deadPlayer(Player player,boolean quit) {
+    public void deadPlayer(Player player, boolean quit) {
         this.deadPlayers.add(player);
-        this.quit = quit;
-        if(quit){
-            if(this.players.size() == 1) {
+        if (quit) {
+            if (this.players.size() == 1) {
                 player.setGameMode(GameMode.SURVIVAL);
+                isGame = false;
                 this.gameManager.end(this);
                 return;
             }
             return;
         }
-        if(this.players.size() == this.deadPlayers.size()) {
+        if (this.players.size() == this.deadPlayers.size()) {
+            isGame = false;
             end();
             return;
         }
-        player.teleport(this.startLocation);
         if (this.deadPlayers.size() >= this.players.size() - 1) {
             Player winner = null;
             for (Player p : this.players) {
                 if (!this.deadPlayers.contains(p)) {
                     winner = p;
-                    p.teleport(this.startLocation);
-                    broadcastTitle(ChatUtils.color("&l&1" + winner.getName() + " wygrał deathswapa!"), "", 10, 70, 20);
+                    broadcastTitle(ChatUtils.color("&l&1" + winner.getName()), ChatUtils.color("&cwygrał Deathswapa"), 10, 70, 20);
                     end();
                 }
             }
@@ -126,7 +131,7 @@ public class Game {
     }
 
     private void sendCountdown() {
-        String title = ChatUtils.color("Gotowi?");
+        String title = ChatUtils.color("&1&lGotowi?");
 
         new BukkitRunnable() {
             int timeLeft = 5;
@@ -134,12 +139,12 @@ public class Game {
             @Override
             public void run() {
                 if (timeLeft < 1) {
-                    broadcastTitle(ChatUtils.color(" &c&l Niech rozpocznie sie gra!"), "", 0, 70, 20);
+                    broadcastTitle(ChatUtils.color("&c&lNiech rozpocznie"), ChatUtils.color(" &c&lsie gra!"), 0, 70, 20);
                     this.cancel();
                     startSwapTimer();
                     return;
                 }
-                broadcastTitle(title, startingMessage(timeLeft), 0, 25, 0);
+                broadcastTitle(title, startingMessage(timeLeft), 0, 60, 0);
 
                 timeLeft--;
             }
@@ -197,13 +202,14 @@ public class Game {
 
             @Override
             public void run() {
-                if (timeLeft < 1) {
-                    performSwap();
-                    this.cancel();
-                    startSwapTimer();
-                    return;
+                if(isGame) {
+                    if (timeLeft < 1) {
+                        performSwap();
+                        this.cancel();
+                        startSwapTimer();
+                        return;
+                    }
                 }
-
                 timeLeft--;
             }
         }.runTaskTimer(this.gameManager.getPlugin(), 0L, 20L);
@@ -213,7 +219,7 @@ public class Game {
         ArrayList<Player> swappable = new ArrayList<Player>();
 
         for (Player player : this.players) {
-            if (!this.deadPlayers.contains(player)) {
+            if (!this.deadPlayers.contains(player) && isGame) {
                 player.sendTitle(ChatUtils.color(" &b&l Zamiana!"), "", 10, 40, 20);
                 swappable.add(player);
             }

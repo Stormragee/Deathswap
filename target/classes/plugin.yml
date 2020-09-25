@@ -18,4 +18,4 @@ commands:
     description: Adds a player to current game. Requires permission.
   exit:
     description: Exits the current game.
-    aliases: [wyjdz]
+    aliases: [wyjdz,quit]
