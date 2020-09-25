@@ -1,5 +1,5 @@
 name: Deathswap
-version: 1.0-SNAPSHOT
+version: 1.1-SNAPSHOT
 main: pl.trollcraft.deathswap.Deathswap
 author: Stormragee
 commands:
@@ -16,3 +16,6 @@ commands:
     aliases: [dolacz,j]
   add:
     description: Adds a player to current game. Requires permission.
+  exit:
+    description: Exits the current game.
+    aliases: [wyjdz]

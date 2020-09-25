@@ -17,6 +17,7 @@ public class Deathswap extends JavaPlugin {
         getCommand("end").setExecutor(new EndCommand());
         getCommand("join").setExecutor(new JoinCommand());
         getCommand("add").setExecutor(new AddPlayerCommand());
+        getCommand("exit").setExecutor(new ExitCommand());
         getServer().getPluginManager().registerEvents(new DeathListener(),this);
         getServer().getPluginManager().registerEvents(new QuitListener(),this);
 

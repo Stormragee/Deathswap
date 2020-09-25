@@ -27,6 +27,7 @@ public class Game {
     private Location startLocation;
     public String id;
     public Player owner;
+    private boolean quit;
 
     public Game(Player owner, GameManager gameManager) {
         this.owner = owner;
@@ -36,7 +37,7 @@ public class Game {
         this.swapRadius = getRandomRadius(400, 1200);
         this.players.add(owner);
         this.id = IDGenerator.random(3);
-        owner.sendMessage(ChatUtils.color("&4Gra utworzona! Zapros znajomych lub daj znac na chacie ze szukasz graczy ;) Kod gry:") + this.id);
+        owner.sendMessage(ChatUtils.color("&4Gra utworzona! Zapros znajomych lub daj znac na chacie ze szukasz graczy ;) Kod gry:  ") + this.id);
     }
 
 
@@ -59,7 +60,9 @@ public class Game {
     public void end() {
         for (Player player : this.players) {
             player.setGameMode(GameMode.SURVIVAL);
+            player.teleport(player.getWorld().getSpawnLocation());
         }
+        resetPlayers();
         this.gameManager.end(this);
     }
 
@@ -72,8 +75,21 @@ public class Game {
         return false;
     }
 
-    public void deadPlayer(Player player) {
+    public void deadPlayer(Player player,boolean quit) {
         this.deadPlayers.add(player);
+        this.quit = quit;
+        if(quit){
+            if(this.players.size() == 1) {
+                player.setGameMode(GameMode.SURVIVAL);
+                this.gameManager.end(this);
+                return;
+            }
+            return;
+        }
+        if(this.players.size() == this.deadPlayers.size()) {
+            end();
+            return;
+        }
         player.teleport(this.startLocation);
         if (this.deadPlayers.size() >= this.players.size() - 1) {
             Player winner = null;

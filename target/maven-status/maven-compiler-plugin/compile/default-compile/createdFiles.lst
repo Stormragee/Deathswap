@@ -1,5 +1,6 @@
 pl\trollcraft\deathswap\commands\AddPlayerCommand.class
 pl\trollcraft\deathswap\obj\Game$3.class
+pl\trollcraft\deathswap\commands\ExitCommand.class
 pl\trollcraft\deathswap\chatutils\ChatUtils.class
 pl\trollcraft\deathswap\commands\JoinCommand.class
 pl\trollcraft\deathswap\obj\Game.class
@@ -11,5 +12,6 @@ pl\trollcraft\deathswap\obj\IDGenerator.class
 pl\trollcraft\deathswap\commands\StartCommand.class
 pl\trollcraft\deathswap\Deathswap.class
 pl\trollcraft\deathswap\obj\GameManager.class
+pl\trollcraft\deathswap\commands\CurrentGamesCommand.class
 pl\trollcraft\deathswap\commands\EndCommand.class
 pl\trollcraft\deathswap\obj\Game$2.class

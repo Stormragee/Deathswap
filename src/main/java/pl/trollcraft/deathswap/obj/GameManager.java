@@ -66,12 +66,18 @@ public class GameManager {
 
         player.sendMessage(ChatUtils.color("&5&lNie moge znalesc tej gry Sprawdz dokladnie kod :("));
     }
-
+    public void quit(Player player) {
+        for (Game game : this.games) {
+            if (game.findPlayer(player)) {
+                player.sendMessage(ChatUtils.color("Wyszedłeś z gry!"));
+                handleDeath(player);
+                return;
+            }
+        }
+        player.sendMessage(ChatUtils.color("&5&lNie jesteś w zadnej grze!"));
+    }
     public void addPlayer(Player owner, String playerName) {
         Game ownersGame = null;
-        if (!owner.hasPermission("Deathswap.addPlayer")) {
-            owner.sendMessage(ChatUtils.color("&cBrak uprawnien!"));
-        }
         for (Game game : this.games) {
             if (game.owner.equals(owner)) {
                 ownersGame = game;
@@ -118,7 +124,7 @@ public class GameManager {
     public void handleDeath(Player player) {
         for (Game game : this.games) {
             if (game.findPlayer(player)) {
-                game.deadPlayer(player);
+                game.deadPlayer(player,false);
                 return;
             }
         }
@@ -131,7 +137,7 @@ public class GameManager {
     public void handleQuit(Player player) {
         for (Game game : this.games) {
             if (game.findPlayer(player)) {
-                game.deadPlayer(player);
+                game.deadPlayer(player,true);
                 return;
             }
         }
