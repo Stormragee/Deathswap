@@ -1,0 +1,18 @@
+name: Deathswap
+version: 1.0-SNAPSHOT
+main: pl.trollcraft.deathswap.Deathswap
+author: Stormragee
+commands:
+  start:
+    description: Starts a game when already created.
+  create:
+    description: Creates a new game of Deathswap.
+    aliases: [stworz,nowa]
+  end:
+    description: Forces a game to end. Requires permission.
+    aliases: [zakoncz,koniec]
+  join:
+    description: Joins a game with a specific ID.
+    aliases: [dolacz,j]
+  add:
+    description: Adds a player to current game. Requires permission.
